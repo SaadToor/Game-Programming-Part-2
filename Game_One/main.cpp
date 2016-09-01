@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <SDL.h>
+#include <SDL_Image.h> 
 
-#include "SDL.h"
-#include "SDL_Image.h"
 #include "man.h"
 #include "global_variables.h"
 
@@ -30,18 +30,6 @@ int processEvents(SDL_Window* window, Man* man) {
 			case SDLK_ESCAPE:
 				done = 1;
 				break;
-			case SDLK_RIGHT:
-				man->x += 10;
-				break;
-			case SDLK_LEFT:
-				man->x -= 10;
-				break;
-			case SDLK_UP:
-				man->y -= 10;
-				break;
-			case SDLK_DOWN:
-				man->y += 10;
-				break;
 			}
 		}
 		break;
@@ -51,7 +39,28 @@ int processEvents(SDL_Window* window, Man* man) {
 			break;
 		}
 	}
-	return done;
+
+	// Make the keys faster and less lag
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	// If the key is pressed, it will return true for the whole frame
+	if (state[SDL_SCANCODE_LEFT])
+		man->x--;
+	if (state[SDL_SCANCODE_RIGHT])
+		man->x++;
+	if (state[SDL_SCANCODE_UP])
+		man->y--;
+	if (state[SDL_SCANCODE_DOWN])
+		man->y++;
+	if (state[SDL_SCANCODE_A])
+		man->x--;
+	if (state[SDL_SCANCODE_D])
+		man->x++;
+	if (state[SDL_SCANCODE_W])
+		man->y--;
+	if (state[SDL_SCANCODE_S])
+		man->y++;
+
+return done;
 }
 
 void doRender(SDL_Renderer* renderer, Man* man) {
@@ -80,6 +89,10 @@ void doRender(SDL_Renderer* renderer, Man* man) {
 }
 
 int main(int argc, char* args[]) {
+
+	std::cout << "Hows that?\n\nMy first ever game program\n\nIts not much, but a decent start\n\nI made it so when you"
+		<< "press the \nESC button or close at the top right then it will close\n\n" 
+		<< "You can move the box with the (wsad) and (UP DOWN LEFT RIGTH) keys\n\n:)\n\n";
 
 	//Declare a window
 	SDL_Window* window;
@@ -118,7 +131,7 @@ int main(int argc, char* args[]) {
 	while (!done) {
 		// Check of events
 		done = processEvents(window, &man);
-		
+
 		// Look at function
 		doRender(renderer, &man);
 
@@ -126,13 +139,13 @@ int main(int argc, char* args[]) {
 		SDL_Delay(100 /* MillaSeconds(ms) */);
 	}
 
-
-
 	// Close and destroy the window
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 
 	// Memory Allocation
 	SDL_Quit();
+
+	std::cout << "It's Awsome!!!!!!\n\nYEAH\n";
 	return 0;
 }
